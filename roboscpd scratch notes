@@ -1,6 +1,14 @@
 
 - do maths exercise
 	what is gaussian distribution?
+		'x [is distributed as] n(u, o^2)'
+		script n, mew, sigma squared
+		https://www.coursera.org/learn/machine-learning/lecture/ZYAyC/gaussian-distribution
+		http://www.design.caltech.edu/erik/Misc/Gaussian.html
+		?
+		> og calculus (I think?) https://en.wikipedia.org/wiki/Inverse_transform_sampling
+		> 1958 https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+		> new hipness, very interesting https://en.wikipedia.org/wiki/Ziggurat_algorithm
 	progmem algo for gaussian distribution given - mean, - std deviation
 	do linear solve for given data
 
