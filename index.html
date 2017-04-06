@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>roboscpd</title>
+		<style type = text/css>
+			body { margin: 0; font-family: "Arial", sans-serif; }
+			canvas { margin: 0; } 
+			#wrapper {
+				margin: 10px;
+			}
+			#sidebar {
+				float: left;
+				max-width: 290px;
+				margin: 0;
+				padding: 0;
+			}
+			#cli {
+				position:fixed;
+				bottom:50px;
+				padding-left: 10px;
+			}
+			#charts {
+				float: left;
+				max-width: 390px;
+				margin-left: 300px;
+				padding: 0;
+			}
+			#container {
+				margin-left: 700px;
+				overflow:hidden;
+			}
+			input {
+				border:none;
+				background-color:#ccc;
+				color: #000;
+				width: 270px;
+				padding: 10px;
+				position:fixed;
+				bottom:15px;
+				left:10px;
+			}
+			input:focus {
+				background-color:#eee;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div id="sidebar">
+				<!-- 
+				-in the future, we will want to provide the option to
+				upload saved JSONs for viewing only...
+				also: uploading scan patterns
+				<form id="file-form" action="handler.php" method="POST">
+  					<input type="file" id="file-select" name="photos[]" multiple/>
+  					<button type="submit" id="upload-button">Upload JSON</button>
+				</form>
+				-->
+				<p id="cli"></p>
+				<input type="text" id="commandIn" value="">
+				<!--<button onclick="commandLineInput()">Line</button>-->
+			</div>
+			<div id="charts">
+				<canvas id ="exChart" width = "390" height = "390"></canvas>
+			</div>
+			<div id="container"></div>
+		</div>
+		<script src="js/chart/Chart.bundle.min.js"></script>
+		<script src="js/three/three.js"></script>
+		<script src="js/three/controls/TrackballControls.js"></script>
+		<script src="js/three/Detector.js"></script>
+		
+		<script src="js/roboscpd.js"></script>
+	</body>
+</html>
