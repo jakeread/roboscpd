@@ -38,27 +38,13 @@ function handleCommands(input){
 		default:
 			socket.send(input);
 			break;
-		case "save":
-		case "Save":
-		case "SAVE":
-			saveData(dataPoints);
+		case "gaussian set":
+			generateGaussianSet();
 			break;
-		case "load":
-		case "Load":
-		case "LOAD":
-			loadData();
+		case "gaussian":
+			generateGaussian();
 			break;
-		case "load pattern":
-		case "Load Pattern":
-		case "Load pattern":
-		case "LOAD PATTERN":
-			loadScanPattern();
-			break;
-		case "scan":
-		case "Scan":
-		case "SCAN":
-			scan.init();
-			break;
+
 	}
 	// DO IT WITH EVENTS <------------------
 }
@@ -247,25 +233,116 @@ var scan = {
 
 // ----------------------------------------------------------------------------------------------- CHART
 
-var exChartContext = document.getElementById("exChart");
-
 var linearData = new Array();
 
 for (x = 0; x <= 1; x += 0.01){
-	linearData.push({'x': x, 'y': 2+3*x}); 	
+	linearData.push({'x': x, 'y': 2+3*x+generateGaussian(0,0.5)}); 	
 	// y = 2 + 3x + c 
 	//where c is a gaussian random variable with a standard deviation of 0.5
 }
 
-var exChart = new Chart(exChartContext, {
+var linearChartContext = document.getElementById("linearChart");
+
+var linearChart = new Chart(linearChartContext, {
     type: 'line',
     data: {
         datasets: [{
-            label: 'y=2+3x',
+            label: 'y=2+3x+c',
             data: linearData,
             showLine: false
         }]
     },
+    options: {
+        scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom'
+            }]
+        }
+    }
+});
+
+var nonLinearData = new Array();
+
+for(x = 0; x <= 1; x += 0.01){
+	nonLinearData.push({'x': x, 'y': Math.sin(2 + 3*x) + generateGaussian(0,0.1)});
+	// y = sin(2 + 3x) + c
+	// where c is a gaussian random variable with a standard deviation of 0.5
+}
+
+var nonLinearChartContext = document.getElementById("nonLinearChart");
+
+var nonLinearChart = new Chart(nonLinearChartContext, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'y=sin(2+3x)+c',
+            data: nonLinearData,
+            showLine: false
+        }]
+    },
+    options: {
+        scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom'
+            }]
+        }
+    }
+}); 
+
+
+// using Marsaglia polar method to generate normal distribution
+// https://en.wikipedia.org/wiki/Marsaglia_polar_method
+// wants to wrap this in a generateGaussianSet(number, mean, std dev) funtion l8er
+
+var gausData = new Array(); // the datas
+
+function generateGaussianSet(){
+	for(var i = gausData.length; i > 0; i--){
+		gausData.pop();
+	} 
+	while(gausData.length < 100){
+		gausData.push({'x': generateGaussian(0, 1), 'y': 0});
+		distChart.update();
+	}
+	console.log(gausData);
+}
+
+var spareReady = false;
+var spare;
+
+function generateGaussian(mean = 0, stdDev = 0.5){
+	if(spareReady){
+		spareReady = false;
+		console.log(spare * stdDev + mean);
+		return spare * stdDev + mean;
+	} else {
+		var s = 0;
+		var x, y;
+		while(s >= 1 || s ==0 ){ // goes until s fits
+			x = Math.random()*2 - 1;
+			y = Math.random()*2 - 1;
+			s = x*x + y*y;
+		}
+		mul = Math.sqrt(-2 * Math.log(s) / s);
+		spare = y * mul;
+		spareReady = true;
+		return x * mul * stdDev + mean;
+	}
+}
+
+var gausChartContext = document.getElementById("gausChart");
+
+var distChart = new Chart(gausChartContext, {
+	type: 'line',
+	data: {
+		datasets: [{
+			label: 'gaussian generator...',
+			data: gausData,
+			showLine: false
+		}]
+	},
     options: {
         scales: {
             xAxes: [{
