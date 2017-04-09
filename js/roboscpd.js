@@ -37,12 +37,25 @@ function handleCommands(input){
 	switch(input){
 		default:
 			socket.send(input);
+			console.log("PIPE'd IT: ", input);
 			break;
 		case "gaussian set":
 			generateGaussianSet();
 			break;
 		case "gaussian":
 			generateGaussian();
+			break;
+		case "toArray":
+			chartDataToArray(linearData);
+			break;
+		case "doSvd":
+			doSvd(chartDataToArray(linearData));
+			break;
+		case "doSolve":
+			doVSolve(linearData);
+			break;
+		case "drawFit":
+			drawFit(linearData);
 			break;
 
 	}
@@ -241,6 +254,20 @@ for (x = 0; x <= 1; x += 0.01){
 	//where c is a gaussian random variable with a standard deviation of 0.5
 }
 
+Chart.pluginService.register({
+	beforeInit: function(chart) {
+        var data = chart.config.data;
+        for (var i = 0; i < data.datasets.length; i++) {
+            for (var j = 0; j < data.labels.length; j++) {
+            	var fct = data.datasets[i].function,
+                	x = data.labels[j],
+                	y = fct(x);
+                data.datasets[i].data.push(y);
+            }
+        }
+    }
+});
+
 var linearChartContext = document.getElementById("linearChart");
 
 var linearChart = new Chart(linearChartContext, {
@@ -250,6 +277,14 @@ var linearChart = new Chart(linearChartContext, {
             label: 'y=2+3x+c',
             data: linearData,
             showLine: false
+        },
+        {
+        	label: 'f(x) = 3x+2',
+        	function: function(x) { return 2 * x + 3 },
+        	borderColor: "rgba(152,102,255,1)",
+        	data: [],
+        	fill: true,
+        	showLine: true
         }]
     },
     options: {
@@ -262,9 +297,68 @@ var linearChart = new Chart(linearChartContext, {
     }
 });
 
+function chartDataToArray(data){
+
+	var outData = new Array();
+
+	for (i = 0; i < data.length; i ++){
+		outData[i] = new Array(data[i].x, data[i].y);
+	}
+	console.log(outData);
+	return outData;
+}
+
+function doSvd(A){
+	console.log(numeric.svd(A));
+}
+
+function s2wi(S){ // single values to W-inverse
+	var W = [[1/S[0], 0],[0, 1/S[1]]]; // check dis first
+	return W;
+}
+
+function doVSolve(Data){ // on the data, a: assumes it is linear, y = a1(x) + a2 is our game, data is in (x, y) points
+
+	var A = new Array(); // A matrix, will be svd'd
+	var b = new Array(); // the data pts
+
+	for(var i = 0; i < Data.length; i ++){
+		A.push(new Array(Data[i].x, 1)); // 2nd value in A matrix is 1 - as per neil
+		b.push(Data[i].y);
+	}
+
+	var svd = numeric.svd(A);
+
+	var Ut = numeric.transpose(svd.U); // U transpose
+	var Wi = s2wi(svd.S);
+
+	console.log("A: ", A);
+	console.log("b: ", b);
+	console.log("svd: ", svd);
+	console.log("Ut: ", Ut);
+	console.log("Wi: ", Wi);
+
+	var dotOne = numeric.dotMMbig(svd.V, Wi); // is it Vtranspose that comes out of SVD ?
+	var dotTwo = numeric.dotMV(Ut, b);
+
+	console.log("dotOne: ", dotOne);
+	console.log("dotTwo: ", dotTwo);
+
+	var dotThree = numeric.dotMV(dotOne, dotTwo);
+
+	console.log("dotThree: ", dotThree);
+
+	return {"M": dotThree[0], "b": dotThree[1]};
+}
+
+function drawFit(Data){
+	var soln = doVSolve(Data);
+
+}
+
 var nonLinearData = new Array();
 
-for(x = 0; x <= 1; x += 0.01){
+for(x = 0; x <= 2; x += 0.01){
 	nonLinearData.push({'x': x, 'y': Math.sin(2 + 3*x) + generateGaussian(0,0.1)});
 	// y = sin(2 + 3x) + c
 	// where c is a gaussian random variable with a standard deviation of 0.5
