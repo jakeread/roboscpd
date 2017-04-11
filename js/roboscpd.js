@@ -268,6 +268,8 @@ Chart.pluginService.register({
     }
 });
 
+var soln = doVSolve(linearData);
+
 var linearChartContext = document.getElementById("linearChart");
 
 var linearChart = new Chart(linearChartContext, {
@@ -279,11 +281,10 @@ var linearChart = new Chart(linearChartContext, {
             showLine: false
         },
         {
-        	label: 'f(x) = 3x+2',
-        	function: function(x) { return 2 * x + 3 },
+        	label: 'f(x) = ' + soln.M + 'x + ' + soln.b,
         	borderColor: "rgba(152,102,255,1)",
-        	data: [],
-        	fill: true,
+        	data: [{'x': 0, 'y': soln.b}, {'x': 1, 'y': soln.M*1 + soln.b}],
+        	fill: false,
         	showLine: true
         }]
     },
@@ -296,6 +297,7 @@ var linearChart = new Chart(linearChartContext, {
         }
     }
 });
+
 
 function chartDataToArray(data){
 
@@ -332,28 +334,14 @@ function doVSolve(Data){ // on the data, a: assumes it is linear, y = a1(x) + a2
 	var Ut = numeric.transpose(svd.U); // U transpose
 	var Wi = s2wi(svd.S);
 
-	console.log("A: ", A);
-	console.log("b: ", b);
-	console.log("svd: ", svd);
-	console.log("Ut: ", Ut);
-	console.log("Wi: ", Wi);
-
 	var dotOne = numeric.dotMMbig(svd.V, Wi); // is it Vtranspose that comes out of SVD ?
 	var dotTwo = numeric.dotMV(Ut, b);
 
-	console.log("dotOne: ", dotOne);
-	console.log("dotTwo: ", dotTwo);
-
 	var dotThree = numeric.dotMV(dotOne, dotTwo);
 
-	console.log("dotThree: ", dotThree);
+	console.log("M: ", dotThree[0], "b: ", dotThree[1]);
 
 	return {"M": dotThree[0], "b": dotThree[1]};
-}
-
-function drawFit(Data){
-	var soln = doVSolve(Data);
-
 }
 
 var nonLinearData = new Array();
@@ -426,6 +414,7 @@ function generateGaussian(mean = 0, stdDev = 0.5){
 	}
 }
 
+/*
 var gausChartContext = document.getElementById("gausChart");
 
 var distChart = new Chart(gausChartContext, {
@@ -446,6 +435,7 @@ var distChart = new Chart(gausChartContext, {
         }
     }
 });
+*/
 
 // ----------------------------------------------------------------------------------------------- GRAPHICS
 

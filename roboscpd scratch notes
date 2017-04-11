@@ -1,5 +1,1 @@
-
-- do maths exercise
-	do linear solve for given data
-
-- do robot simulator?
+lots of refactoring ... commands are objects, register for events? look at mods, decide if CLI is really what we want. systems design!
