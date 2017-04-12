@@ -1,1 +1,13 @@
 lots of refactoring ... commands are objects, register for events? look at mods, decide if CLI is really what we want. systems design!
+
+	- do enviro setup
+http://www.chibios.org/dokuwiki/doku.php?id=chibios:guides:eclipse1
+
+	- firmware load / flash / debug tool
+http://vedder.se/2015/01/vesc-open-source-esc/ #firmware
+
+	- starting to write a new bb
+http://vedder.se/2015/10/communicating-with-the-vesc-using-uart/
+http://vedder.se/2015/08/vesc-writing-custom-applications/
+http://vedder.se/2012/12/debugging-the-stm32f4-using-openocd-gdb-and-eclipse/
+http://vedder.se/2014/12/connecting-a-programmerdebugger-my-custom-stm32-pcbs/
