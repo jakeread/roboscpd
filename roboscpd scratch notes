@@ -1,13 +1,49 @@
-lots of refactoring ... commands are objects, register for events? look at mods, decide if CLI is really what we want. systems design!
+Big TBD:
+	Doing serial interpreter on kinemaster, so that we can really start testing 'the whole' system
+	better differentiation between CLI->Serial and CLI->roboscpd 
+	solid, written documentation on commands, structures, plans like that etc
 
-	- do enviro setup
-http://www.chibios.org/dokuwiki/doku.php?id=chibios:guides:eclipse1
+GLOBAL   		-----------------------------------------------------------------------------------
+	roboscpd
+		f'n main
 
-	- firmware load / flash / debug tool
-http://vedder.se/2015/01/vesc-open-source-esc/ #firmware
+COMMS LAYERS 	-----------------------------------------------------------------------------------
 
-	- starting to write a new bb
-http://vedder.se/2015/10/communicating-with-the-vesc-using-uart/
-http://vedder.se/2015/08/vesc-writing-custom-applications/
-http://vedder.se/2012/12/debugging-the-stm32f4-using-openocd-gdb-and-eclipse/
-http://vedder.se/2014/12/connecting-a-programmerdebugger-my-custom-stm32-pcbs/
+	socketconsole
+		buffers, sends, receives from socket
+		spits 'robtalk' objects to the 'robtalk' dispatcher, that updates / calls everything else
+
+		websocketlayer
+			handles the actual socket
+
+	robtalk
+		objects, received from serial line
+		object flags, data (parsed from serial string by socketconsole)
+
+		robtalkdispatch
+			reads robtalk buffer when there are new things, calls other functions accordingly
+
+MATH & DATA 	-----------------------------------------------------------------------------------
+
+	mathutil
+		function scratchpad for math functions, supersimple, global as mathutil.
+
+	datasets
+		function scratchpad for chart updates, data-set management
+
+APPLICATIONS	-----------------------------------------------------------------------------------
+
+	robotsimulator
+		does physics sim, control sim, pretends to be hardware
+
+	nmm 'modules'
+		does nmm assignments, using roboscpd
+
+GRAPHICS AND UI 	-------------------------------------------------------------------------------
+
+	graphics
+		manages three
+
+	vrobot
+		manages virtual robot-representation: kinematics, stls, etc
+			display purposes only, tbh
