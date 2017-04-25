@@ -34,12 +34,12 @@ function SocketConsole() {
 			console.log("Socket is closed");
 		}
 
-		if(input == "open socket"){
+		if(input == "open port"){
 			console.log("Opening socket...");
 			sckt.open();
 		}
 
-		if(input == "close socket"){
+		if(input == "close port"){
 			sckt.close();
 		}
 	}

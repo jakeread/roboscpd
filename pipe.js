@@ -16,7 +16,7 @@ const rl = readline.createInterface({
 rl.on('line', parseLineIn);
 
 function parseLineIn(data){
-	if(debug){console.log("rl: parseLineIn" + data);}
+	if(debug){console.log("rl: parseLineIn: " + data);}
 	writeToPort(data);
 }
 
@@ -25,7 +25,7 @@ function parseLineIn(data){
 
 var serialport = require('serialport'),
 	SerialPort = serialport,
-	portname = 'COM9'; //'/dev/ttyACM0'; // to do direct
+	portname = '/dev/ttyUSB0'; //'/dev/ttyACM0'; // to do direct
 	//process.argv[2]; // to read serial port name from command line
 
 var myPort = new SerialPort(portname, { 
@@ -33,7 +33,8 @@ var myPort = new SerialPort(portname, {
 	dataBits: 8,
 	parity: 'none',
 	flowControl: false, 
-	parser: serialport.parsers.readline("\r\n") // sets readline function to call only when new line
+	parser: serialport.parsers.raw // helpful for cases (loopback test, etc) where no newline
+	//parser: serialport.parsers.readline("\r\n") // sets readline function to call only when new line
 });
 
 myPort.on('open', function() {
@@ -52,7 +53,7 @@ myPort.on('data', serialDataIn); // on data event, do this function
 
 function serialDataIn(data) { // from PORT
 	if(debug){console.log("PIPE: serialDataIn: " + data);}
-	console.log("SNSR: " + data);
+	console.log("ROBO: " + data);
 	publish(data); // send to websocket
 };
 

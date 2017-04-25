@@ -36,7 +36,7 @@ function WebSocketLayer() {
 		socketconsole.newLineIn(theData); // ------------------------ INPUT LAUNCHPOINT
 	}
 
-	send = function(data){
-		socket.send(data);
+	this.send = function(data){
+		this.theSocket.send(data);
 	}
 }
