@@ -38,6 +38,7 @@ APPLICATIONS	-------------------------------------------------------------------
 
 	nmm 'modules'
 		does nmm assignments, using roboscpd
+		plotly.js
 
 GRAPHICS AND UI 	-------------------------------------------------------------------------------
 
