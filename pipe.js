@@ -33,8 +33,8 @@ var myPort = new SerialPort(portname, {
 	dataBits: 8,
 	parity: 'none',
 	flowControl: false, 
-	parser: serialport.parsers.raw // helpful for cases (loopback test, etc) where no newline
-	//parser: serialport.parsers.readline("\r\n") // sets readline function to call only when new line
+	//parser: serialport.parsers.raw // helpful for cases (loopback test, etc) where no newline
+	parser: serialport.parsers.readline("\r\n") // sets readline function to call only when new line
 });
 
 myPort.on('open', function() {
